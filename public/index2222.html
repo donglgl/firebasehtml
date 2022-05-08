@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+  </head>
+  <body>
+    <div >Test <input type="text" id="Namebox"><br></div>
+    <div>number <input id = "Number" type ="Number"><br></div>
+    <div >전압 <input type="text" id="Voltage"><br></div>
+    <div >전류 <input type="text" id="Current"><br></div>
+    <div >전력 <input type="text" id="Power"><br></div>
+    <button id = "Checkbutton">확인</button>
+    <button id = "InsButton">들어가는 양식 확인</button>
+
+
+
+
+    <!-----------------파베 sdk------------------->
+        <!-- update the version number as needed -->
+        <script defer src="/__/firebase/9.7.0/firebase-app-compat.js"></script>
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/9.7.0/firebase-auth-compat.js"></script>
+        <script defer src="/__/firebase/9.7.0/firebase-database-compat.js"></script>
+        <script defer src="/__/firebase/9.7.0/firebase-firestore-compat.js"></script>
+        <script defer src="/__/firebase/9.7.0/firebase-functions-compat.js"></script>
+        <script defer src="/__/firebase/9.7.0/firebase-messaging-compat.js"></script>
+        <script defer src="/__/firebase/9.7.0/firebase-storage-compat.js"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
+     
+ 
+     const firebaseConfig = {
+     apiKey: "AIzaSyAnvfmebqNQJsyFmoVnGMHwWeb-adR3qzQ",
+     authDomain: "rpiflatform.firebaseapp.com",
+     databaseURL: "https://rpiflatform-default-rtdb.asia-southeast1.firebasedatabase.app",
+     projectId: "rpiflatform",
+     storageBucket: "rpiflatform.appspot.com",
+     messagingSenderId: "671474518113",
+     appId: "1:671474518113:web:10c7b75dd53f9e96f78220",
+     measurementId: "G-6GQPER2FQ6"
+     };
+     // Initialize Firebase
+     const app = initializeApp(firebaseConfig);
+
+     import {getDatabase,ref,get,set,child,update,remove}
+     from "https://www.gstatic.com/firebasejs/9.7.0/firebase-database.js";
+
+     const db = getDatabase();
+
+     var namebox = document.getElementById("Namebox");
+     var number = document.getElementById("Number");
+     var voltage = document.getElementById("Voltage");
+     var current = document.getElementById("Current");
+     var power = document.getElementById("Power");
+     var checkbtn = document.getElementById("Checkbutton");
+     var insertbtn = document.getElementById("InsButton");
+
+
+     function InsertData(){
+       set(ref(db,"Test/"+number.value),{
+         NameofStd: namebox.value,
+         RollNo : number.value,
+         VoltageCk : voltage.value,
+         CurrentCk : current.value,
+         PowerCk : power.value
+       }).then(()=>{
+         alert("data stored successfully");
+       })
+       .catch((error)=>{
+         alert("unsuccessful, error"+error);
+       });
+     }
+
+
+     function SelectData(){
+       const dbref = ref(db);
+       
+       get(child(dbref,"Test/"+number.value)).then((snapshot)=>{
+         if(snapshot.exists()){
+           namebox.value = snapshot.val().NameofStd;
+           voltage.value = snapshot.val().VoltageCk;
+           current.value = snapshot.val().CurrentCk;
+           power.value = snapshot.val().PowerCk;
+         }
+         else{
+          alert("no data found");
+         }
+       }).catch((error)=>{
+        alert("unsuccessful, error"+error);
+       });
+     }
+
+     checkbtn.addEventListener('click',SelectData);
+     insertbtn.addEventListener('click',InsertData);
+
+    </script>
+  </body>
+</html>
